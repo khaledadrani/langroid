@@ -3,7 +3,7 @@ from sqlalchemy.orm import registry
 from sqlalchemy.sql import text
 from sqlalchemy import create_engine, MetaData
 
-from source.config import DataBaseConfig
+from source.configuration.config import DataBaseConfig
 
 metadata = MetaData()
 
