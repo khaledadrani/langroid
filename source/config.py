@@ -1,15 +1,15 @@
+from functools import lru_cache
+
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
 
 class AppConfig(BaseSettings):
-    APP_HOST: str = Field(env="APP_HOST", default="0.0.0.0")
-    APP_PORT: int = Field(env="APP_PORT", default=8003)
-    PROJECT_NAME: str = Field(env="PROJECT_NAME", default="CSPNM Data Handler Service")
+    APP_HOST: str = Field(env="APP_HOST", default="localhost")
+    APP_PORT: int = Field(env="APP_PORT", default=8000)
+    PROJECT_NAME: str = Field(env="PROJECT_NAME", default="Langroid")
     ROOT_PATH: str = Field(env="ROOT_PATH", default="/api")
     API_VERSION: str = Field(env="API_VERSION", default='/v1')
-    MODEL_SERVICE_URL: str = Field(env="MODEL_SERVICE_URL", default="http://localhost:8004")
-    GATEWAY_TIMEOUT: int = Field(env="GATEWAY_TIMEOUT", default=60)
 
     DEBUG: bool = Field(description="Use this to enable dev and debugging features", default=False)
 
@@ -27,3 +27,12 @@ class DataBaseConfig(BaseSettings):
     def db_url(self):
         return f"postgresql://{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}" \
                f"?user={self.DB_USER}&password={self.DB_PASSWORD}"
+
+    @property
+    def async_url(self) -> str:  # TODO should review test this
+        return f"postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}/{self.name}"
+
+
+@lru_cache(maxsize=1)  # TODO test this
+def get_settings():
+    return AppConfig()
