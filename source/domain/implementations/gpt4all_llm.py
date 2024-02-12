@@ -14,15 +14,20 @@ class GPT4AllLLM(BaseLLM):
 
     def _generate(self, prompt: str, callback: Callable = None) -> Generator[str, None, None]:
         # TODO should accept arguments from either constructor or method call
-        for token in self.model.generate(prompt=prompt, temp=0):
+        for token in self.model.generate(prompt=prompt,
+                                         max_tokens=256,
+                                         streaming=True,
+                                         repeat_penalty=5.0
+                                         ):
             if callback:
                 callback(token)
             yield token
 
-    async def _stream(self, prompt: str, callback: AsyncFunctionType = None):
-
-        for token in self.model.generate(prompt=prompt, temp=0):
-            if callback:
-                await callback(token)
-
-            yield token
+    # async def _stream(self, prompt: str, callback: AsyncFunctionType = None):
+    #
+    #     for token in self.model.generate(prompt=prompt,
+    #                                      temp=0,):
+    #         if callback:
+    #             await callback(token)
+    #
+    #         yield token

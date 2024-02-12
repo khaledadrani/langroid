@@ -15,6 +15,7 @@ class AppConfig(BaseSettings):
     PROJECT_NAME: str = Field(default="Langroid")
     ROOT_PATH: str = Field(default="/api")
     API_VERSION: str = Field(default='/v1')
+    APP_WORKERS_COUNT: int = Field(default=1)
 
     DEBUG: bool = Field(description="Use this to enable dev and debugging features", default=False)
 
@@ -32,6 +33,7 @@ class DataBaseConfig(BaseSettings):
     def db_url(self):
         return f"postgresql://{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}" \
                f"?user={self.DB_USER}&password={self.DB_PASSWORD}"
+
 
 class LLMConfig(CommonConfig):
     MODEL_PATH: str = "./artifacts/"

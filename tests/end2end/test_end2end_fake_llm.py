@@ -13,12 +13,12 @@ def test_synchronous_generation():
         print(token, end='')
         time.sleep(0.0001)
 
-    text = ''
+    response = ''
     for token in llm._generate('Blue Whales are the biggest animal to ever inhabit the Earth.',
                                callback=default_test_sync_callback):
-        text += token
+        response += token
 
-    assert text and isinstance(text, str)
+    assert isinstance(response, str) and len(response) > 5
 
 
 @pytest.mark.asyncio
@@ -32,4 +32,6 @@ async def test_asynchronous_generation():
     response = await llm._stream('Blue Whales are the biggest animal to ever inhabit the Earth.',
                                  callback=default_test_sync_callback)
 
-    assert str(response)
+    response = str(response)
+
+    assert isinstance(response, str) and len(response) > 5
