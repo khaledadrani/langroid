@@ -23,8 +23,7 @@ class GPT4AllLLM(BaseLLM):
                 callback(token)
             yield token
 
-    async def stream(self, prompt: str, callback: AsyncFunctionType = None) -> AsyncGenerator[
-        str, None]:
+    async def stream(self, prompt: str, callback: AsyncFunctionType = None) -> AsyncGenerator[str, None]:
         for token in self.model.generate(prompt=prompt,
                                          max_tokens=256,
                                          streaming=True,

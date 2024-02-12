@@ -37,7 +37,7 @@ class DataBaseConfig(BaseSettings):
 
 class LLMConfig(CommonConfig):
     MODEL_PATH: str = "./artifacts/"
-    MODEL_NAME: str = 'mistral-7b-openorca.Q4_0.gguf'
+    MODEL_NAME: str = 'gpt4all-falcon-newbpe-q4_0.gguf'
 
 
 @lru_cache(maxsize=1)  # TODO test this

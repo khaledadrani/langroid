@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
 
-  domtick_database:
+  langroid_database:
     build:
       context: ./docker/
       dockerfile: postgres.Dockerfile
@@ -11,7 +11,7 @@ services:
       POSTGRES_DB: domtik_database
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
-    container_name: domtik_database
+    container_name: langroid_database
     ports:
       - "5433:5432"
     volumes:
@@ -25,11 +25,23 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: "root@root.root"
       PGADMIN_DEFAULT_PASSWORD: "root"
-    container_name: pgadmin
+    container_name: langroid_pgadmin
     ports:
-      - "5051:80"
+      - "5052:80"
     volumes:
       - postgres_data:/var/lib/pgadmin
+
+  rabbitmq:
+    image: rabbitmq
+    command: rabbitmq-server
+    expose:
+      - 5672
+      - 15672
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+      interval: 5s
+      timeout: 15s
+      retries: 1
 
 
 volumes:
