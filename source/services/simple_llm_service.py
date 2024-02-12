@@ -22,12 +22,10 @@ class LLMService:
         return "".join(tuple(result))
 
     async def generate_answer(self, prompt: str, model_type: SupportedLLModelsEnum):
-        # text = "".join(tuple(self.model_factory[model_type]._generate(prompt=prompt)))
-
         with ProcessPoolExecutor() as executor:
             text = await asyncio.get_event_loop().run_in_executor(executor,
-                                                                    self._generate_answer,
-                                                                    prompt, model_type)
+                                                                  self._generate_answer,
+                                                                  prompt, model_type)
 
         return {
             "response": text
