@@ -17,7 +17,7 @@ class LLMService:
         }
 
     def _generate_answer(self, prompt: str, model_type: SupportedLLModelsEnum) -> str:
-        result = self.model_factory[model_type]._generate(prompt=prompt)
+        result = self.model_factory[model_type].generate(prompt=prompt)
 
         return "".join(tuple(result))
 

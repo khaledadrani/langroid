@@ -17,7 +17,7 @@ class FakeListLLM(BaseLLM):
             "Hi, I am fine thank you!"
         ]
 
-    def _generate(
+    def generate(
             self,
             prompt: str,
             callback: AsyncFunctionType = None

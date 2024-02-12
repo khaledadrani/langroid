@@ -1,4 +1,4 @@
-from typing import Callable, Generator
+from typing import Callable, Generator, AsyncGenerator
 
 from gpt4all import GPT4All
 
@@ -12,7 +12,7 @@ class GPT4AllLLM(BaseLLM):
         super().__init__(config=config)
         self.model = GPT4All(model_name=config.MODEL_NAME, model_path=config.MODEL_PATH)
 
-    def _generate(self, prompt: str, callback: Callable = None) -> Generator[str, None, None]:
+    def generate(self, prompt: str, callback: Callable = None) -> Generator[str, None, None]:
         # TODO should accept arguments from either constructor or method call
         for token in self.model.generate(prompt=prompt,
                                          max_tokens=256,
@@ -23,11 +23,13 @@ class GPT4AllLLM(BaseLLM):
                 callback(token)
             yield token
 
-    # async def _stream(self, prompt: str, callback: AsyncFunctionType = None):
-    #
-    #     for token in self.model.generate(prompt=prompt,
-    #                                      temp=0,):
-    #         if callback:
-    #             await callback(token)
-    #
-    #         yield token
+    async def stream(self, prompt: str, callback: AsyncFunctionType = None) -> AsyncGenerator[
+        str, None]:
+        for token in self.model.generate(prompt=prompt,
+                                         max_tokens=256,
+                                         streaming=True,
+                                         repeat_penalty=5.0
+                                         ):
+            if callback:
+                await callback(token)
+            yield token

@@ -12,14 +12,15 @@ class BaseLLM(ABC):
         self.config = config
 
     @abstractmethod
-    def _generate(self, prompt: str, callback: Optional[Union[Callable, None]] = None) -> Generator[str, None, None]:
+    def generate(self, prompt: str, callback: Optional[Union[Callable, None]] = None) -> Generator[str, None, None]:
         raise NotImplementedError()
 
-    async def _stream(self, prompt: str, callback: AsyncFunctionType = None) -> Generator[
+    async def stream(self, prompt: str, callback: AsyncFunctionType = None) -> Generator[
         str, None, None]:
         """
         Default implementation for _stream
+        TODO it will not work with an asynchrnous callback
         """
         return await asyncio.get_running_loop().run_in_executor(
-            None, self._generate, prompt, callback
+            None, self.generate, prompt, callback
         )

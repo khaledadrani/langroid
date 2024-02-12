@@ -14,8 +14,8 @@ def test_synchronous_generation():
         time.sleep(0.0001)
 
     response = ''
-    for token in llm._generate('Blue Whales are the biggest animal to ever inhabit the Earth.',
-                               callback=default_test_sync_callback):
+    for token in llm.generate('Blue Whales are the biggest animal to ever inhabit the Earth.',
+                              callback=default_test_sync_callback):
         response += token
 
     assert isinstance(response, str) and len(response) > 5
@@ -29,8 +29,8 @@ async def test_asynchronous_generation():
         print(token, end='')
         time.sleep(0.0001)
 
-    response = await llm._stream('Blue Whales are the biggest animal to ever inhabit the Earth.',
-                                 callback=default_test_sync_callback)
+    response = await llm.stream('Blue Whales are the biggest animal to ever inhabit the Earth.',
+                                callback=default_test_sync_callback)
 
     response = str(response)
 

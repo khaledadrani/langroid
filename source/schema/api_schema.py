@@ -19,5 +19,5 @@ assistant
 
 
 class SimpleLLMRequest(BaseModel):
-    prompt: str = Field(example=gpt4all_mistral_prompt)
-    llm_type: SupportedLLModelsEnum = Field(example=SupportedLLModelsEnum.GPT_4ALL)
+    prompt: str = Field(examples=[gpt4all_mistral_prompt])
+    llm_type: SupportedLLModelsEnum = Field(examples=[SupportedLLModelsEnum.GPT_4ALL])
