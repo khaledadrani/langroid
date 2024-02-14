@@ -20,7 +20,8 @@ class FakeListLLM(BaseLLM):
     def generate(
             self,
             prompt: str,
-            callback: AsyncFunctionType = None
+            callback: AsyncFunctionType = None,
+            **kwargs
     ) -> Generator[str, None, None]:
         """Return next response"""
         response = random.choice(self.responses)
