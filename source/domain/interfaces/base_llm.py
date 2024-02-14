@@ -1,6 +1,6 @@
 import asyncio
 from abc import abstractmethod, ABC
-from typing import Callable, Generator, Awaitable, Optional, Union
+from typing import Callable, Generator, Optional, Union
 
 from pydantic_settings import BaseSettings
 
@@ -15,11 +15,10 @@ class BaseLLM(ABC):
     def generate(self, prompt: str, callback: Optional[Union[Callable, None]] = None) -> Generator[str, None, None]:
         raise NotImplementedError()
 
-    async def stream(self, prompt: str, callback: AsyncFunctionType = None) -> Generator[
-        str, None, None]:
+    async def stream(self, prompt: str, callback: AsyncFunctionType = None) -> Generator[str, None, None]:
         """
         Default implementation for _stream
-        TODO it will not work with an asynchrnous callback
+        TODO it will not work with an asynchronous callback
         """
         return await asyncio.get_running_loop().run_in_executor(
             None, self.generate, prompt, callback
