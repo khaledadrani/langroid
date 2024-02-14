@@ -8,6 +8,7 @@ from source.schema.common_schema import SupportedLLModelsEnum
 
 class LLMParams(BaseModel): #TODO common Params then translate for each model (mapper?)
     temp: Optional[int] = 0 # temp specific to gpt4all
+    repeat_penalty: Optional[float] = 5
 
 
 class SimpleLLMRequest(BaseModel):
