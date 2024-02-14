@@ -1,23 +1,16 @@
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
+from source.configuration.constants import gpt4all_mistral_prompt_example
 from source.schema.common_schema import SupportedLLModelsEnum
 
-gpt4all_mistral_template = '''
-<|im_start|>system
-{system_message}<|im_end|>
-<|im_start|>user
-{prompt}<|im_end|>
-<|im_start|>assistant
-'''
-gpt4all_mistral_prompt = '''
-<|im_start|>system
-You are a researcher in Harverd with great knowledge about all domains<|im_end|>
-<|im_start|>user
-Please provide a brief summary of the book "1984" by George Orwell.<|im_end|>
-assistant
-'''
+
+class LLMParams(BaseModel): #TODO common Params then translate for each model (mapper?)
+    temp: Optional[int] = 0 # temp specific to gpt4all
 
 
 class SimpleLLMRequest(BaseModel):
-    prompt: str = Field(examples=[gpt4all_mistral_prompt])
+    prompt: str = Field(examples=[gpt4all_mistral_prompt_example])
     llm_type: SupportedLLModelsEnum = Field(examples=[SupportedLLModelsEnum.GPT_4ALL])
+    params: Optional[LLMParams] = None

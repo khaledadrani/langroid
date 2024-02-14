@@ -1,6 +1,6 @@
 import asyncio
 from concurrent.futures import ProcessPoolExecutor
-from typing import Dict
+from typing import Dict, Optional
 
 from source.configuration.config import LLMConfig
 from source.domain.implementations.fake_llm import FakeListLLM
@@ -16,16 +16,30 @@ class LLMService:
             SupportedLLModelsEnum.FAKE: FakeListLLM(LLMConfig())
         }
 
-    def _generate_answer(self, prompt: str, model_type: SupportedLLModelsEnum) -> str:
-        result = self.model_factory[model_type].generate(prompt=prompt)
+    def _generate_answer(self,
+                         prompt: str,
+                         model_type: SupportedLLModelsEnum,
+                         model_params: dict
+                         ) -> str:
+
+        result = self.model_factory[model_type].generate(prompt=prompt, **model_params)
 
         return "".join(tuple(result))
 
-    async def generate_answer(self, prompt: str, model_type: SupportedLLModelsEnum):
+    async def generate_answer(self,
+                              prompt: str,
+                              model_type: SupportedLLModelsEnum,
+                              model_params: Optional[dict] = None):
+
+        if not model_params:
+            model_params = {}
+
         with ProcessPoolExecutor() as executor:
             text = await asyncio.get_event_loop().run_in_executor(executor,
                                                                   self._generate_answer,
-                                                                  prompt, model_type)
+                                                                  prompt, model_type,
+                                                                  model_params
+                                                                  )
 
         return {
             "response": text

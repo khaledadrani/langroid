@@ -12,10 +12,10 @@ class BaseLLM(ABC):
         self.config = config
 
     @abstractmethod
-    def generate(self, prompt: str, callback: Optional[Union[Callable, None]] = None) -> Generator[str, None, None]:
+    def generate(self, prompt: str, callback: Optional[Union[Callable, None]] = None, **kwargs) -> Generator[str, None, None]:
         raise NotImplementedError()
 
-    async def stream(self, prompt: str, callback: AsyncFunctionType = None) -> Generator[str, None, None]:
+    async def stream(self, prompt: str, callback: AsyncFunctionType = None,  **kwargs) -> Generator[str, None, None]:
         """
         Default implementation for _stream
         TODO it will not work with an asynchronous callback
