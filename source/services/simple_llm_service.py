@@ -54,7 +54,6 @@ class LLMService:
 
         model_wrapper = self.model_factory[model_type]
 
-
         async for token in model_wrapper.stream(prompt=prompt):
             print(token)
             if await request.is_disconnected():

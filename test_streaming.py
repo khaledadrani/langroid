@@ -1,5 +1,6 @@
-import time
 import argparse
+import time
+
 import requests
 
 from source.schema.api_schema import SimpleLLMRequest
