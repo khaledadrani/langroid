@@ -1,6 +1,6 @@
 import asyncio
 from concurrent.futures import ProcessPoolExecutor
-from typing import Dict, Optional
+from typing import Dict, Optional, AsyncGenerator
 
 from source.configuration.config import LLMConfig
 from source.domain.implementations.fake_llm import FakeListLLM
@@ -44,3 +44,14 @@ class LLMService:
         return {
             "response": text
         }
+
+    async def stream_response(self, prompt: str,
+                              model_type: SupportedLLModelsEnum,
+                              model_params: Optional[dict] = None) -> AsyncGenerator:
+
+        model_wrapper = self.model_factory[model_type]
+
+
+        async for token in model_wrapper.stream(prompt=prompt):
+            print(token)
+            yield token

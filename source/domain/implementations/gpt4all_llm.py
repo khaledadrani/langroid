@@ -1,3 +1,4 @@
+import asyncio
 from typing import Callable, Generator, AsyncGenerator
 
 from gpt4all import GPT4All
@@ -10,6 +11,9 @@ from source.schema.common_schema import AsyncFunctionType
 class GPT4AllLLM(BaseLLM):
     def __init__(self, config: LLMConfig):
         super().__init__(config=config)
+
+        self.lock = asyncio.Lock()
+
         self.model = GPT4All(model_name=config.MODEL_NAME, model_path=config.MODEL_PATH)
 
         self.default_params = dict(max_tokens=256,
@@ -26,9 +30,10 @@ class GPT4AllLLM(BaseLLM):
             yield token
 
     async def stream(self, prompt: str, callback: AsyncFunctionType = None, **kwargs) -> AsyncGenerator[str, None]:
-        for token in self.model.generate(prompt=prompt,
-                                         **(self.default_params | kwargs)
-                                         ):
-            if callback:
-                await callback(token)
-            yield token
+        async with self.lock:
+            for token in self.model.generate(prompt=prompt,
+                                             **(self.default_params | kwargs)
+                                             ):
+                if callback:
+                    await callback(token)
+                yield token

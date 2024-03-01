@@ -2,7 +2,7 @@ from typing import Dict
 
 from dependency_injector.wiring import inject, Provide
 from fastapi import APIRouter, Depends
-
+from fastapi.responses import StreamingResponse
 from source.configuration.constants import gpt4all_mistral_template
 from source.configuration.injection import DependencyContainer
 from source.schema.api_schema import SimpleLLMRequest
@@ -24,6 +24,20 @@ async def generate_llm_sync(request_data: SimpleLLMRequest,
                                              model_type=request_data.llm_type,
                                              model_params=request_data.params.model_dump()
                                              )
+
+
+@llm_generation_api.post(
+    "/stream",
+    response_model=Dict
+)
+@inject
+async def stream_llm(request_data: SimpleLLMRequest,
+                     llm_service: LLMService = Depends(
+                         Provide[DependencyContainer.llm_service]),
+                     ):
+    return StreamingResponse(llm_service.stream_response(prompt=request_data.prompt,
+                                                         model_type=request_data.llm_type,
+                                                         ), media_type="text/event-stream")
 
 
 @llm_generation_api.post(
