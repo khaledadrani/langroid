@@ -2,6 +2,9 @@ import asyncio
 from concurrent.futures import ProcessPoolExecutor
 from typing import Dict, Optional, AsyncGenerator
 
+from loguru import logger
+from starlette.requests import Request
+
 from source.configuration.config import LLMConfig
 from source.domain.implementations.fake_llm import FakeListLLM
 from source.domain.implementations.gpt4all_llm import GPT4AllLLM
@@ -45,7 +48,7 @@ class LLMService:
             "response": text
         }
 
-    async def stream_response(self, prompt: str,
+    async def stream_response(self, request: Request, prompt: str,
                               model_type: SupportedLLModelsEnum,
                               model_params: Optional[dict] = None) -> AsyncGenerator:
 
@@ -54,4 +57,7 @@ class LLMService:
 
         async for token in model_wrapper.stream(prompt=prompt):
             print(token)
+            if await request.is_disconnected():
+                logger.warning("Connection disconnected, end streaming!")
+                return
             yield token

@@ -1,4 +1,5 @@
 import asyncio
+from concurrent.futures import ProcessPoolExecutor
 from typing import Callable, Generator, AsyncGenerator
 
 from gpt4all import GPT4All
